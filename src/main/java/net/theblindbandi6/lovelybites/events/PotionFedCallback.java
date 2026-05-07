@@ -7,11 +7,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public interface PlayerFedCallback {
-    Event<PlayerFedCallback> EVENT = EventFactory.createArrayBacked(PlayerFedCallback.class,
+public interface PotionFedCallback {
+    Event<PotionFedCallback> EVENT = EventFactory.createArrayBacked(PotionFedCallback.class,
             (listeners) -> (feeder, targetPlayer, itemStack) -> {
 
-                for (PlayerFedCallback listener : listeners) {
+                for (PotionFedCallback listener : listeners) {
                     InteractionResult result =  listener.onFed(feeder, targetPlayer, itemStack);
                     if (result != null) {
                         return result;

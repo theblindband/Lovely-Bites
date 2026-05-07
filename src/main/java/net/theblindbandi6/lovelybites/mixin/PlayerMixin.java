@@ -22,7 +22,9 @@ import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.theblindbandi6.lovelybites.advancement.ModCriteria;
-import net.theblindbandi6.lovelybites.events.PlayerFedCallback;
+import net.theblindbandi6.lovelybites.events.FoodFedCallback;
+import net.theblindbandi6.lovelybites.events.MilkFedCallback;
+import net.theblindbandi6.lovelybites.events.PotionFedCallback;
 import net.theblindbandi6.lovelybites.util.ModStats;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -62,7 +64,7 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser {
                     if ((playerHunger < 20 || food.canAlwaysEat())) {
 
                         //Event Callback for Food
-                        InteractionResult eventResult = PlayerFedCallback.EVENT.invoker().onFed(feedingPlayer, targetPlayer, itemStack);
+                        InteractionResult eventResult = FoodFedCallback.EVENT.invoker().onFed(feedingPlayer, targetPlayer, itemStack);
                         if (eventResult != null) {
                             cir.setReturnValue(InteractionResult.PASS);
                             cir.cancel();
@@ -136,6 +138,11 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser {
                 if (potionContents != null) {
 
                     //Event Callback for Potions
+                    InteractionResult eventResult = PotionFedCallback.EVENT.invoker().onFed(feedingPlayer, targetPlayer, itemStack);
+                    if (eventResult != null) {
+                        cir.setReturnValue(InteractionResult.PASS);
+                        cir.cancel();
+                    }
 
                     //Apply Potion Effects
                     float durationScale = itemStack.getOrDefault(DataComponents.POTION_DURATION_SCALE, 1.0F);
@@ -173,6 +180,11 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser {
                 if (itemStack.is(Items.MILK_BUCKET)) {
 
                     //Event Callback for Milk Buckets
+                    InteractionResult eventResult = MilkFedCallback.EVENT.invoker().onFed(feedingPlayer, targetPlayer, itemStack);
+                    if (eventResult != null) {
+                        cir.setReturnValue(InteractionResult.PASS);
+                        cir.cancel();
+                    }
 
                     //Remove all potion effects
                     targetPlayer.removeAllEffects();

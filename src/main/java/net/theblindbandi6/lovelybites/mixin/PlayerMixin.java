@@ -62,7 +62,11 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser {
                     if ((playerHunger < 20 || food.canAlwaysEat())) {
 
                         //Event Callback for Food
-                        PlayerFedCallback.EVENT.invoker().onFed(feedingPlayer, targetPlayer, itemStack);
+                        InteractionResult eventResult = PlayerFedCallback.EVENT.invoker().onFed(feedingPlayer, targetPlayer, itemStack);
+                        if (eventResult != null) {
+                            cir.setReturnValue(InteractionResult.PASS);
+                            cir.cancel();
+                        }
 
                         //Feed target player
                         int hunger = food.nutrition();

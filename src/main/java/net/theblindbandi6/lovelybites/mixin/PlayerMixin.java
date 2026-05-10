@@ -86,7 +86,7 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser {
                         //Check for consumable component for Potion Effects
                         Level level = targetPlayer.level();
                         Consumable consumable = itemStack.get(DataComponents.CONSUMABLE);
-                        if (consumable != null) {
+                        if (consumable != null && level instanceof ServerLevel) {
                             List<ConsumeEffect> effects = consumable.onConsumeEffects();
                             effects.forEach(action -> action.apply(level, itemStack, targetPlayer));
                         }
